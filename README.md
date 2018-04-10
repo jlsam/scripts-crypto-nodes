@@ -1,7 +1,7 @@
 # scripts-crypto-nodes
-Collection of Bash scripts for quick deployment and update of cryptocurrency nodes in Ubuntu
+Collection of Bash scripts for quick deployment and update of cryptocurrency (master)nodes in Ubuntu.
 
-These scripts will help you quickly configure a new remote server (most commonly a VPS) and run wallet nodes to work as masternodes. They were tested on Ubuntu 16.04 LTS.
+These scripts will help you quickly configure a new remote server (most commonly a VPS) and run wallet nodes to work as masternodes. Testing was done on Ubuntu 16.04 LTS.
 
 Modifications to /etc/ssh/sshd_config will change your server's fingerprint after the initial reboot.
 You will probably get a warning message, but you can follow the command to remove the previous fingerprint (copy/paste):<br>
