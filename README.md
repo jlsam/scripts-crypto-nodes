@@ -25,7 +25,7 @@ Current version will perform the following major steps:
 This is still work in progress, other coins will be added in time and also scripts for other tasks
 Comments and suggestions are appreciated!
 
-If this work helped you in any way, saved you time or showed you something you didn't know, consider leaving a tip.
+If this work helped you in any way, saved you time or showed you something you didn't know, consider leaving a tip.<br>
 LTC or ETH is appreciated, but also any of the coins these scripts are for.
 
 LTC: LSE7ezK7Qoszjgz9Ew25xmxazBzEsSL4Qt<br>
