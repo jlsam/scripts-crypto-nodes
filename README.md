@@ -22,7 +22,7 @@ Current version will perform the following major steps:
 9. Prepare a systemd service to run the wallet node automatically at startup
 10. Reboot the server to apply changes and test if systemd is starting your node during startup, as intended
 
-This is still work in progress, other coins will be added in time and also scripts for other tasks
+This is still work in progress, other coins will be added in time and also scripts for other tasks.<br>
 Comments and suggestions are appreciated!
 
 If this work helped you in any way, saved you time or showed you something you didn't know, consider leaving a tip.<br>
