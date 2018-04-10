@@ -28,6 +28,6 @@ Comments and suggestions are appreciated!
 If this work helped you in any way, saved you time or showed you something you didn't know, consider leaving a tip.
 LTC or ETH is appreciated, but also any of the coins these scripts are for.
 
--LTC: LSE7ezK7Qoszjgz9Ew25xmxazBzEsSL4Qt 
--ETH: 0xc7Ef788B776734Ff3694c1Be8465110Babf61a6a<br>
--Polis: PJyr4NgoPrWLuKsSV7gVZBNmDKGbK4PJbC 
+LTC: LSE7ezK7Qoszjgz9Ew25xmxazBzEsSL4Qt<br>
+ETH: 0xc7Ef788B776734Ff3694c1Be8465110Babf61a6a<br>
+Polis: PJyr4NgoPrWLuKsSV7gVZBNmDKGbK4PJbC<br>
