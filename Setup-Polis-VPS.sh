@@ -112,7 +112,7 @@ ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 wget $installer_url
 tar -xvf $installer_file
 top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
-cp $top_lvl_dir/bin/polis{d,-cli} /usr/local/bin
+cp -v $top_lvl_dir/bin/polis{d,-cli} /usr/local/bin
 rm $installer_file
 rm -R $top_lvl_dir
 echo
