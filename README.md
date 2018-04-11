@@ -8,7 +8,8 @@ You will probably get a warning message, but you can follow the command to remov
 `ssh-keygen -f "/home/<user>/.ssh/known_hosts" -R <server IP>`<br>
 After that, reconnect and accept the new fingerprint.
   
-These scripts will always work on a baseline of Key-based SSH authentication. No passwords for server authentication. You are of course free to edit the scripts to work with passwords for authentication, but you'll have a hard time finding anyone giving advice on how that's a good idea. If you don't know how Key-based SSH authentication works, you can start by reading this: https://help.ubuntu.com/community/SSH/OpenSSH/Keys. If you want to connect from Windows, Putty is your friend, try searching 'how to use putty ssh' for example.
+These scripts will always work on a baseline of Key-based SSH authentication. No passwords for server authentication. 
+You are of course free to edit the scripts to work with passwords for authentication, but you'll have a hard time finding anyone giving advice on how that's a good idea. If you don't know how Key-based SSH authentication works, you can start by reading this: https://help.ubuntu.com/community/SSH/OpenSSH/Keys. If you want to connect from Windows, Putty is your friend, try searching 'how to use putty ssh' for example.
 
 Current version will perform the following major steps:
 1. Update the system and install additional necessary software
