@@ -26,8 +26,8 @@ printf "OK\n\n"
 read -p "Choose a name for the SSH key files: " ssh_file
 printf "\e[0m"
 ssh-keygen -t rsa -a 1000 -b 4096 -C "$USER@$HOSTNAME" -o -f ~/.ssh/$ssh_file
-SSH_AUTH_SOCK=0 ssh-copy-id -i ~/.ssh/$ssh_file root@$1
 
+ssh-copy-id -i ~/.ssh/$ssh_file root@$1
 if ! [ $? -eq 0 ]; then
  printf "\e[93mError uploading key to server.\n"
  printf "Key was probably created, but not uploaded.\n"
