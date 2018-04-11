@@ -69,8 +69,7 @@ chown -R $new_sudoer:$new_sudoer /home/$new_sudoer/.ssh/
 chmod -R 700 /home/$new_sudoer/.ssh/
 
 # Edit sshd_config
-echo
-printf "\e[93m/etc/ssh/sshd_config edits:\e[0m\n"
+printf "\n\e[93m/etc/ssh/sshd_config edits:\e[0m\n"
 sed -i -r -e "s/^#?PermitRootLogin yes/PermitRootLogin no/w /dev/stdout" \
 -e "s/^#?PasswordAuthentication yes/PasswordAuthentication no/w /dev/stdout" \
 -e "s/^#?ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/w /dev/stdout" \
