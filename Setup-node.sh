@@ -11,7 +11,7 @@
 new_NOlogin="nologin"
 new_sudoer="sudoer"
 wallet_genkey="---" # Needs to be a valid key, otherwise the node won't even run
-installer_url="https://github.com/polispay/polis/releases/download/v1.2.2/poliscore-1.2.2-linux64.tar.gz"
+installer_url="https://something.tar.gz"
 # Setting locale for en_US.UTF-8, but it should work with your prefered locale too.
 # Depending on your location, you may need to add/modify locales here to avoid errors,
 # ex. "en_GB.UTF-8 de_DE.UTF-8"
@@ -44,7 +44,7 @@ elif [ "$new_sudoer" = "sudoer" ]; then
   exit 1
 fi
 
-# Fix locale. Particularly important for python Sentinel installation
+# Fix locale.
 locale-gen $locs
 # During the next command interactive choices, it should be enough to OK everything
 dpkg-reconfigure locales
@@ -96,14 +96,14 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh/tcp
 ufw limit ssh/tcp
-ufw allow 24126/tcp # some coin nodes may need tcp and udp, in that case remove /tcp
+ufw allow PORT NUMBER/tcp # some coin nodes may need tcp and udp, in that case remove /tcp
 ufw logging on
 ufw --force enable
 ufw status
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
-# Setup Polis Masternode
+# Setup COIN NAME Masternode
 installer_file="$(basename $installer_url)"
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
@@ -112,11 +112,11 @@ ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 wget $installer_url
 tar -xvf $installer_file
 top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
-cp -v $top_lvl_dir/bin/polis{d,-cli} /usr/local/bin
+cp -v $top_lvl_dir/bin/COIN NAME{d,-cli} /usr/local/bin
 rm $installer_file
 rm -R $top_lvl_dir
 echo
-mkdir -p /home/$new_NOlogin/.poliscore
+mkdir -p /home/$new_NOlogin/.COIN DIR
 echo -e "rpcuser=$random_user
 rpcpassword=$random_pass
 rpcallowip=127.0.0.1
@@ -139,8 +139,8 @@ connect=159.89.139.41:24126
 connect=174.138.70.155:24126
 connect=174.138.70.16:24126
 connect=45.55.247.25:24126
-" | tee /home/$new_NOlogin/.poliscore/polis.conf
-chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.poliscore/
+" | tee /home/$new_NOlogin/.COIN DIR/COIN NAME.conf
+chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.COIN DIR/
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
@@ -154,10 +154,10 @@ User=$new_NOlogin
 Group=$new_NOlogin
 
 Type=forking
-PIDFile=/home/$new_NOlogin/.poliscore/polisd.pid
+PIDFile=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
 
-ExecStart=/usr/local/bin/polisd -pid=/home/$new_NOlogin/.poliscore/polisd.pid
-ExecStop=/usr/local/bin/polis-cli stop
+ExecStart=/usr/local/bin/COIN DAEMON -pid=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
+ExecStop=/usr/local/bin/COIN NAME-cli stop
 
 Restart=always
 PrivateTmp=true
@@ -168,22 +168,10 @@ StartLimitBurst=5
 
 [Install]
 WantedBy=multi-user.target
-" | tee /etc/systemd/system/polisd.service
-systemctl enable polisd.service
+" | tee /etc/systemd/system/COIN DAEMON.service
+systemctl enable COIN DAEMON.service
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
-
-# Setup Polis Sentinel
-sudo -H -u $new_NOlogin sh <<EOF
-cd /home/${new_NOlogin}/
-git clone https://github.com/polispay/sentinel.git /home/${new_NOlogin}/sentinel
-cd sentinel/
-virtualenv ./venv
-./venv/bin/pip install -r requirements.txt
-echo "* * * * * cd /home/${new_NOlogin}/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1" >> tmpcron
-crontab tmpcron
-rm tmpcron
-EOF
 
 # Disable root login
 printf "\n\e[93mDisabling root login:\e[0m\n"
