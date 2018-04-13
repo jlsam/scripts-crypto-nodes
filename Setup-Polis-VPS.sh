@@ -128,17 +128,26 @@ maxconnections=256
 externalip=$ext_IP_addr
 masternodeprivkey=$wallet_genkey
 masternode=1
-connect=35.227.49.86:24126
-connect=192.243.103.182:24126
-connect=185.153.231.146:24126
-connect=91.223.147.100:24126
-connect=96.43.143.93:24126
-connect=104.236.147.210:24126
-connect=159.89.137.114:24126
-connect=159.89.139.41:24126
-connect=174.138.70.155:24126
-connect=174.138.70.16:24126
-connect=45.55.247.25:24126
+addnode=polispay.org:24126
+addnode=node1.polispay.org:24126
+addnode=node2.polispay.org:24126
+addnode=insight.polispay.org:24126
+addnode=insight2.polispay.org:24126
+addnode=explorer.polispay.org:24126
+addnode=35.227.49.86:24126
+addnode=192.243.103.182:24126
+addnode=185.153.231.146:24126
+addnode=91.223.147.100:24126
+addnode=96.43.143.93:24126
+addnode=104.236.147.210:24126
+addnode=159.89.137.114:24126
+addnode=159.89.139.41:24126
+addnode=174.138.70.155:24126
+addnode=174.138.70.16:24126
+addnode=45.55.247.25:24126
+addnode=209.250.245.66:24126
+addnode=199.247.3.98:24126
+addnode=199.247.29.65:24126
 " | tee /home/$new_NOlogin/.poliscore/polis.conf
 chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.poliscore/
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
