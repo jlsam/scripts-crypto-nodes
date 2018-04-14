@@ -113,8 +113,8 @@ wget $installer_url
 tar -xvf $installer_file
 top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
 cp -v $top_lvl_dir/bin/COIN NAME{d,-cli} /usr/local/bin
-rm $installer_file
-rm -R $top_lvl_dir
+rm -v $installer_file
+rm -Rv $top_lvl_dir
 echo
 mkdir -p /home/$new_NOlogin/.COIN DIR
 echo -e "rpcuser=$random_user
