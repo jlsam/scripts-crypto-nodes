@@ -169,5 +169,5 @@ passwd -l root
 
 # Reboot
 printf "\n\e[93mScript completed.\n"
-read -n1 -rsp "$(printf 'Press any key to reboot or Ctrl+C to exit...\n')"
+read -n1 -rsp "$(printf 'Press any key to reboot or Ctrl+C to exit...\e[0m\n')"
 reboot
