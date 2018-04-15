@@ -70,7 +70,7 @@ cd /home/polisia/sentinel/ && sudo -H -u $polis_user bash -c "git pull"
 printf "\n\e[93mUpgrade completed.\n"
 read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
 systemctl start polisd.service
-until polis-cli getinfo &>/dev/null; do
+until sudo -H -u $polis_user bash -c "polis-cli getinfo" &>/dev/null; do
   sleep 2
 done
 
