@@ -166,10 +166,9 @@ User=$new_NOlogin
 Group=$new_NOlogin
 
 Type=forking
-PIDFile=/home/$new_NOlogin/.poliscore/polisd.pid
-
 ExecStart=/usr/local/bin/polisd -pid=/home/$new_NOlogin/.poliscore/polisd.pid
 ExecStop=/usr/local/bin/polis-cli stop
+PIDFile=/home/$new_NOlogin/.poliscore/polisd.pid
 
 Restart=always
 RestartSec=20
