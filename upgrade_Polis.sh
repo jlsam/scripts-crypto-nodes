@@ -16,7 +16,7 @@ polis_user="---"
 if [ "$polis_user" = "---" ]; then
   printf "\n\e[93mPlease edit this script with the username of the (system?) account running the node and try again.\e[0m\n"
   exit 1
-elif ! [ $(getent passwd $polis_user) ]; then
+elif ! getent passwd $polis_user; then
   printf "\n\e[93mThe account name you provided doesn't exist in this server.\e[0m\n"
   exit 1
 fi
