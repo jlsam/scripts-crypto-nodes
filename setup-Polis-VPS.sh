@@ -172,7 +172,7 @@ Restart=always
 RestartSec=20
 PrivateTmp=true
 TimeoutStopSec=60s
-TimeoutStartSec=2s
+TimeoutStartSec=15s
 StartLimitInterval=120s
 StartLimitBurst=5
 
