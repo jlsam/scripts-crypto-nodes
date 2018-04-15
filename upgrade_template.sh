@@ -66,9 +66,9 @@ fi
 printf "\n\e[93mUpgrade completed.\n"
 read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
 systemctl restart COIN.service
-until sudo -H -u $polis_user bash -c "COIN-cli getinfo" &>/dev/null; do
+until sudo -H -u $COIN_user bash -c "COIN-cli getinfo" &>/dev/null; do
   sleep 2
 done
 
-sudo -H -u $polis_user bash -c "COIN-cli getinfo"
-sudo -H -u $polis_user bash -c "COIN-cli masternode status"
+sudo -H -u $COIN_user bash -c "COIN-cli getinfo"
+sudo -H -u $COIN_user bash -c "COIN-cli masternode status"
