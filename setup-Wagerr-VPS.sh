@@ -42,16 +42,18 @@ elif [ "$new_NOlogin" = "nologin" ]; then
 elif [ "$new_sudoer" = "sudoer" ]; then
   printf "\nPlease set your own username with sudo access and run again.\n"
   exit 1
+elif [ "$installer_url" = "https://something.tar.gz" ]; then
+  printf "\nPlease set the URL for the current wallet version and run again.\n"
+  exit 1
 fi
 
 # Fix locale.
 locale-gen $locs
 # During the next command interactive choices, it should be enough to OK everything
-dpkg-reconfigure locales
+#dpkg-reconfigure locales
 
 # Update system & install packages
 apt update && apt -y upgrade
-apt install -y virtualenv python-pip
 echo
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
@@ -96,7 +98,7 @@ ufw default deny incoming
 ufw default allow outgoing
 ufw allow ssh/tcp
 ufw limit ssh/tcp
-ufw allow PORT NUMBER/tcp # some coin nodes may need tcp and udp, in that case remove /tcp
+ufw allow 55002/tcp # some coin nodes may need tcp and udp, in that case remove /tcp
 ufw logging on
 ufw --force enable
 ufw status
@@ -112,31 +114,32 @@ ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 wget $installer_url
 tar -xvf $installer_file
 top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
-cp -v $top_lvl_dir/bin/COIN NAME{d,-cli} /usr/local/bin
+cp -v $top_lvl_dir/bin/wagerr{d,-cli} /usr/local/bin
 rm -v $installer_file
 rm -Rv $top_lvl_dir
 echo
-mkdir -p /home/$new_NOlogin/.COIN DIR
+mkdir -p /home/$new_NOlogin/.wagerr
 echo -e "rpcuser=$random_user
 rpcpassword=$random_pass
 rpcallowip=127.0.0.1
-listen=1
+listen=0
 server=1
 daemon=1
 logtimestamps=1
 maxconnections=256
-externalip=$ext_IP_addr
-masternodeprivkey=$wallet_genkey
 masternode=1
-addnode=IP:PORT
-" | tee /home/$new_NOlogin/.COIN DIR/COIN NAME.conf
-chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.COIN DIR/
+externalip=$ext_IP_addr
+bind=$ext_IP_addr
+masternodeaddr=$ext_IP_addr:55002
+masternodeprivkey=$wallet_genkey
+" | tee /home/$new_NOlogin/.wagerr/wagerr.conf
+chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.wagerr/
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
 # Setup systemd service file
 echo -e "[Unit]
-Description=Polis Masternode
+Description=Wagerr Masternode
 After=network.target
 
 [Service]
@@ -144,23 +147,23 @@ User=$new_NOlogin
 Group=$new_NOlogin
 
 Type=forking
-PIDFile=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
+PIDFile=/home/$new_NOlogin/.wagerr/wagerr.pid
 
-ExecStart=/usr/local/bin/COIN DAEMON -pid=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
-ExecStop=/usr/local/bin/COIN NAME-cli stop
+ExecStart=/usr/local/bin/wagerrd -pid=/home/$new_NOlogin/.wagerr/wagerr.pid
+ExecStop=/usr/local/bin/wagerr-cli stop
 
 Restart=always
 RestartSec=20
 PrivateTmp=true
 TimeoutStopSec=60s
-TimeoutStartSec=2s
+TimeoutStartSec=15s
 StartLimitInterval=120s
 StartLimitBurst=5
 
 [Install]
 WantedBy=multi-user.target
-" | tee /etc/systemd/system/COIN DAEMON.service
-systemctl enable COIN DAEMON.service
+" | tee /etc/systemd/system/wagerrd.service
+systemctl enable wagerrd.service
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
 
