@@ -7,20 +7,20 @@
 
 # Account name running the node
 # You must set this to show node status after restarting
-COIN_user="---"
+wagerr_user="---"
 
 # Elevate user if necessary, to be able to copy files into /usr/local/bin
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
 
 # Checks
-if [ "$COIN_user" = "---" ]; then
+if [ "$wagerr_user" = "---" ]; then
   printf "\n\e[93mPlease edit this script with the username of the (system?) account running the node and try again.\e[0m\n"
   exit 1
-elif ! [ $(getent passwd $COIN_user) ]; then
+elif ! getent passwd $wagerr_user; then
   printf "\n\e[93mThe account name you provided doesn't exist in this server.\e[0m\n"
   exit 1
 fi
-printf "\n\e[93mAccount $COIN_user exists in this server. Moving on.\e[0m\n"
+printf "\n\e[93mAccount $wagerr_user exists in this server. Moving on.\e[0m\n"
 
 # Download file and check if there were no errors
 wget $1
@@ -54,8 +54,8 @@ fi
 
 # Copy new files over to /usr/local/bin
 printf "\n\e[93mStopping wallet node service...\e[0m\n"
-systemctl stop COIN.service
-cp -v $top_lvl_dir/bin/COIN{-cli,d} /usr/local/bin
+systemctl stop wagerrd.service
+cp -v $top_lvl_dir/bin/wagerr{-cli,d} /usr/local/bin
 # Delete installer and remove extracted dir if copy was successful
 if [[ $? -eq "0" ]]; then
   rm -v $installer_file
@@ -65,10 +65,10 @@ fi
 # Restart wallet node
 printf "\n\e[93mUpgrade completed.\n"
 read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
-systemctl restart COIN.service
-until sudo -H -u $polis_user bash -c "COIN-cli getinfo" &>/dev/null; do
+systemctl restart wagerrd.service
+until sudo -H -u $wagerr_user bash -c "wagerr-cli getinfo" &>/dev/null; do
   sleep 2
 done
 
-sudo -H -u $polis_user bash -c "COIN-cli getinfo"
-sudo -H -u $polis_user bash -c "COIN-cli masternode status"
+sudo -H -u $wagerr_user bash -c "wagerr-cli getinfo"
+sudo -H -u $wagerr_user bash -c "wagerr-cli masternode status"
