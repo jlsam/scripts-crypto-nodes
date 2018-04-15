@@ -42,6 +42,9 @@ elif [ "$new_NOlogin" = "nologin" ]; then
 elif [ "$new_sudoer" = "sudoer" ]; then
   printf "\nPlease set your own username with sudo access and run again.\n"
   exit 1
+elif [ "$installer_url" = "https://something.tar.gz" ]; then
+  printf "\nPlease set the URL for the current wallet version and run again.\n"
+  exit 1
 fi
 
 # Fix locale.
@@ -136,7 +139,7 @@ echo
 
 # Setup systemd service file
 echo -e "[Unit]
-Description=Polis Masternode
+Description=COIN Masternode
 After=network.target
 
 [Service]
