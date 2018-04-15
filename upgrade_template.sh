@@ -6,21 +6,21 @@
 # ./update_node.sh https://github.com/polispay/polis/releases/download/v1.3.0/poliscore-1.3.0-x86_64-linux-gnu.tar.gz
 
 # Account name running the node
-# You must set this to be able to update Sentinel and to show node status after restarting
-polis_user="---"
+# You must set this to show node status after restarting
+COIN_user="---"
 
 # Elevate user if necessary, to be able to copy files into /usr/local/bin
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
 
 # Checks
-if [ "$polis_user" = "---" ]; then
+if [ "$COIN_user" = "---" ]; then
   printf "\n\e[93mPlease edit this script with the username of the (system?) account running the node and try again.\e[0m\n"
   exit 1
-elif ! [ $(getent passwd $polis_user) ]; then
+elif ! [ $(getent passwd $COIN_user) ]; then
   printf "\n\e[93mThe account name you provided doesn't exist in this server.\e[0m\n"
   exit 1
 fi
-printf "\n\e[93mAccount $polis_user exists in this server. Moving on.\e[0m\n"
+printf "\n\e[93mAccount $COIN_user exists in this server. Moving on.\e[0m\n"
 
 # Download file and check if there were no errors
 wget $1
@@ -54,25 +54,21 @@ fi
 
 # Copy new files over to /usr/local/bin
 printf "\n\e[93mStopping wallet node service...\e[0m\n"
-systemctl stop polisd.service
-cp -v $top_lvl_dir/bin/polis{-cli,d} /usr/local/bin
+systemctl stop COIN.service
+cp -v $top_lvl_dir/bin/COIN{-cli,d} /usr/local/bin
 # Delete installer and remove extracted dir if copy was successful
 if [[ $? -eq "0" ]]; then
   rm -v $installer_file
   rm -Rv $top_lvl_dir
 fi
 
-# Update Sentinel if necessary
-printf "\n\e[93mUpdating sentinel...\e[0m\n"
-cd /home/polisia/sentinel/ && sudo -H -u $polis_user bash -c "git pull"
-
 # Restart wallet node
 printf "\n\e[93mUpgrade completed.\n"
 read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
-systemctl restart polisd.service
-until { polis-cli getinfo &>/dev/null; } ; do
+systemctl restart COIN.service
+until { COIN-cli getinfo &>/dev/null; } ; do
   sleep 2
 done
 
-sudo -H -u $polis_user bash -c "polis-cli getinfo"
-sudo -H -u $polis_user bash -c "polis-cli masternode status"
+sudo -H -u $polis_user bash -c "COIN-cli getinfo"
+sudo -H -u $polis_user bash -c "COIN-cli masternode status"
