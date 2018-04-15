@@ -150,6 +150,7 @@ ExecStart=/usr/local/bin/COIN DAEMON -pid=/home/$new_NOlogin/.COIN DIR/COIN NAME
 ExecStop=/usr/local/bin/COIN NAME-cli stop
 
 Restart=always
+RestartSec=20
 PrivateTmp=true
 TimeoutStopSec=60s
 TimeoutStartSec=2s
