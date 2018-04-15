@@ -169,6 +169,7 @@ ExecStart=/usr/local/bin/polisd -pid=/home/$new_NOlogin/.poliscore/polisd.pid
 ExecStop=/usr/local/bin/polis-cli stop
 
 Restart=always
+RestartSec=20
 PrivateTmp=true
 TimeoutStopSec=60s
 TimeoutStartSec=2s
