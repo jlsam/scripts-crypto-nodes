@@ -11,7 +11,7 @@
 new_NOlogin="nologin"
 new_sudoer="sudoer"
 wallet_genkey="---" # Needs to be a valid key, otherwise the node won't even run
-installer_url="https://github.com/polispay/polis/releases/download/v1.2.2/poliscore-1.2.2-linux64.tar.gz"
+installer_url="https://something.tar.gz"
 # Setting locale for en_US.UTF-8, but it should work with your prefered locale too.
 # Depending on your location, you may need to add/modify locales here to avoid errors,
 # ex. "en_GB.UTF-8 de_DE.UTF-8"
@@ -41,6 +41,9 @@ elif [ "$new_NOlogin" = "nologin" ]; then
   exit 1
 elif [ "$new_sudoer" = "sudoer" ]; then
   printf "\nPlease set your own username with sudo access and run again.\n"
+  exit 1
+elif [ "$installer_url" = "https://something.tar.gz" ]; then
+  printf "\nPlease set the URL for the current wallet version and run again.\n"
   exit 1
 fi
 
