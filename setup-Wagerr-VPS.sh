@@ -122,7 +122,7 @@ mkdir -p /home/$new_NOlogin/.wagerr
 echo -e "rpcuser=$random_user
 rpcpassword=$random_pass
 rpcallowip=127.0.0.1
-listen=0
+listen=1
 server=1
 daemon=1
 logtimestamps=1
@@ -147,10 +147,9 @@ User=$new_NOlogin
 Group=$new_NOlogin
 
 Type=forking
-PIDFile=/home/$new_NOlogin/.wagerr/wagerr.pid
-
 ExecStart=/usr/local/bin/wagerrd -pid=/home/$new_NOlogin/.wagerr/wagerr.pid
 ExecStop=/usr/local/bin/wagerr-cli stop
+PIDFile=/home/$new_NOlogin/.wagerr/wagerr.pid
 
 Restart=always
 RestartSec=20
