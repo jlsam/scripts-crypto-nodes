@@ -147,16 +147,15 @@ User=$new_NOlogin
 Group=$new_NOlogin
 
 Type=forking
-PIDFile=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
-
 ExecStart=/usr/local/bin/COIN DAEMON -pid=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
 ExecStop=/usr/local/bin/COIN NAME-cli stop
+PIDFile=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
 
 Restart=always
 RestartSec=20
 PrivateTmp=true
 TimeoutStopSec=60s
-TimeoutStartSec=2s
+TimeoutStartSec=15s
 StartLimitInterval=120s
 StartLimitBurst=5
 
