@@ -65,8 +65,8 @@ echo
 # Download source and compile
 git clone $installer_url
 cd Linda/ && make -f makefile.unix USE_UPNP= &&
-strip Lindad #cli?
-cp Lindad /usr/local/bin #cli?
+strip Lindad
+cp Lindad /usr/local/bin
 
 # Create service account
 useradd -r -m -s /usr/sbin/nologin -c "masternode service user" $new_NOlogin
@@ -150,7 +150,7 @@ Group=$new_NOlogin
 
 Type=forking
 ExecStart=/usr/local/bin/Lindad -pid=/home/$new_NOlogin/.Linda/Linda.pid
-#ExecStop=/usr/local/bin/Linda-cli stop
+ExecStop=/usr/local/bin/Lindad stop
 PIDFile=/home/$new_NOlogin/.Linda/Linda.pid
 
 Restart=always
