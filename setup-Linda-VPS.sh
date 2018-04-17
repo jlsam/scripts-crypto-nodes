@@ -53,7 +53,7 @@ locale-gen $locs
 #dpkg-reconfigure locales
 
 # Update system & install packages
-echo
+printf "\n\e[93mAdding Bitcoin PPA...\e[0m\n"
 add-apt-repository ppa:bitcoin/bitcoin
 apt update && apt -y upgrade
 apt install -y libdb4.8-dev libdb4.8++-dev
@@ -114,7 +114,7 @@ echo
 # Download and compile as the new sudo user so it will be in place for future upgrades
 sudo -H -u ${new_sudoer} sh <<EOF
 cd ~ && git clone $installer_url
-cd Linda/src/ && make -f makefile.unix USE_UPNP= &&
+cd Linda/src/ && make -f makefile.unix USE_UPNP=
 EOF
 strip Lindad
 mv -v Lindad /usr/local/bin
