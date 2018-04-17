@@ -136,8 +136,11 @@ maxconnections=256
 masternodeaddr=$ext_IP_addr:33820
 masternodeprivkey=$wallet_genkey
 masternode=1
-addnode=45.32.77.164
-addnode=104.238.159.161
+addnode=seed1.linda-wallet.com
+addnode=seed2.linda-wallet.com
+addnode=seed3.linda-wallet.com
+addnode=seed4.linda-wallet.com
+addnode=seed5.linda-wallet.com
 " | tee /home/$new_NOlogin/.Linda/Linda.conf
 chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.Linda/
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
