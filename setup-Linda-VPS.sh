@@ -63,12 +63,6 @@ echo
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
 
-# Download source and compile
-git clone $installer_url
-cd Linda/src/ && make -f makefile.unix USE_UPNP= &&
-strip Lindad
-cp Lindad /usr/local/bin
-
 # Create service account
 useradd -r -m -s /usr/sbin/nologin -c "masternode service user" $new_NOlogin
 
@@ -115,7 +109,16 @@ ufw --force enable
 ufw status
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
-    
+
+# Download source, compile and cp binary
+# Download and compile as the new sudo user so it will be in place for future upgrades
+sudo -H -u ${new_sudoer} sh <<EOF
+cd ~ && git clone $installer_url
+cd Linda/src/ && make -f makefile.unix USE_UPNP= &&
+EOF
+strip Lindad
+mv -v Lindad /usr/local/bin
+
 # Setup Linda.conf
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
