@@ -114,7 +114,11 @@ echo
 # Download and compile as the new sudo user so it will be in place for future upgrades
 sudo -H -u ${new_sudoer} sh <<EOF
 cd ~ && git clone $installer_url
-cd Linda/src/ && make -f makefile.unix USE_UPNP=
+cd Linda/src/secp256k1/
+./autogen.sh
+./configure
+make
+cd ../ && make -f makefile.unix USE_UPNP=
 strip Lindad
 mv -v Lindad /usr/local/bin
 EOF
