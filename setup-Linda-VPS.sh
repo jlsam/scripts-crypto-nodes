@@ -115,9 +115,9 @@ echo
 sudo -H -u ${new_sudoer} sh <<EOF
 cd ~ && git clone $installer_url
 cd Linda/src/ && make -f makefile.unix USE_UPNP=
-EOF
 strip Lindad
 mv -v Lindad /usr/local/bin
+EOF
 
 # Setup Linda.conf
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
