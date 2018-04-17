@@ -53,9 +53,10 @@ locale-gen $locs
 #dpkg-reconfigure locales
 
 # Update system & install packages
+echo
 add-apt-repository ppa:bitcoin/bitcoin
 apt update && apt -y upgrade
-apt install libdb4.8-dev libdb4.8++-dev
+apt install -y libdb4.8-dev libdb4.8++-dev
 apt install -y build-essential git libtool automake autotools-dev autoconf pkg-config libssl-dev libgmp3-dev libevent-dev bsdmainutils
 apt install -y libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev
 echo
@@ -64,7 +65,7 @@ echo
 
 # Download source and compile
 git clone $installer_url
-cd Linda/ && make -f makefile.unix USE_UPNP= &&
+cd Linda/src/ && make -f makefile.unix USE_UPNP= &&
 strip Lindad
 cp Lindad /usr/local/bin
 
