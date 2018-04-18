@@ -50,7 +50,7 @@ fi
 # Fix locale.
 locale-gen $locs
 # During the next command interactive choices, it should be enough to OK everything
-dpkg-reconfigure locales
+#dpkg-reconfigure locales
 
 # Update system & install packages
 apt update && apt -y upgrade
