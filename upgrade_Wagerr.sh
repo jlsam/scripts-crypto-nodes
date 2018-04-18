@@ -3,7 +3,7 @@
 # This script assumes the same naming and location choices made for the installer script;
 # If you placed the executables in another directory or if you named the systemd service file differently, you'll have to modify this script accordingly.
 # Run script with the URL to the new version to download as parameter, for example:
-# ./update_node.sh https://github.com/polispay/polis/releases/download/v1.3.0/poliscore-1.3.0-x86_64-linux-gnu.tar.gz
+# ./update_node.sh https://github.com/wagerr/wagerr/releases/download/1.5.0/wagerr-1.5.0-x86_64-linux-gnu.tar.gz
 
 # Account name running the node
 # You must set this to show node status after restarting
