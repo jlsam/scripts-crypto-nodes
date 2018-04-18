@@ -119,7 +119,7 @@ cp -v $top_lvl_dir/bin/COIN NAME{d,-cli} /usr/local/bin
 rm -v $installer_file
 rm -Rv $top_lvl_dir
 echo
-mkdir -p /home/$new_NOlogin/.COIN DIR
+mkdir -pv /etc/COIN
 echo -e "rpcuser=$random_user
 rpcpassword=$random_pass
 rpcallowip=127.0.0.1
@@ -132,12 +132,25 @@ externalip=$ext_IP_addr
 masternodeprivkey=$wallet_genkey
 masternode=1
 addnode=IP:PORT
-" | tee /home/$new_NOlogin/.COIN DIR/COIN NAME.conf
-chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.COIN DIR/
+" | tee /etc/COIN/COIN.conf
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
+# Setup logrotate
+# Break debug.log into weekly files and keep at most 5 older log files
+echo -e "/home/$nologin/.COIN/debug.log
+{
+        rotate 5
+        copytruncate
+        weekly
+        missingok
+        notifempty
+        compress
+        delaycompress
+}" | tee /etc/logrotate.d/COIN-debug
+
 # Setup systemd service file
+# https://github.com/bitcoin/bitcoin/blob/master/contrib/init/bitcoind.service
 echo -e "[Unit]
 Description=COIN Masternode
 After=network.target
@@ -146,18 +159,34 @@ After=network.target
 User=$new_NOlogin
 Group=$new_NOlogin
 
-Type=forking
-ExecStart=/usr/local/bin/COIN DAEMON -pid=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
-ExecStop=/usr/local/bin/COIN NAME-cli stop
-PIDFile=/home/$new_NOlogin/.COIN DIR/COIN NAME.pid
+# Creates /run/COINDd owned by $new_NOlogin
+RuntimeDirectory=COINd
 
-Restart=always
+Type=forking
+ExecStart=/usr/local/bin/COIN_DAEMON -pid=/run/COINDd/COIN_NAME.pid -conf=/etc/COIN/COIN.conf
+ExecStop=/usr/local/bin/COIN_NAME-cli stop
+PIDFile=/run/COIND/COIN_NAME.pid
+
+Restart=on-failure
 RestartSec=20
-PrivateTmp=true
 TimeoutStopSec=60s
 TimeoutStartSec=15s
 StartLimitInterval=120s
 StartLimitBurst=5
+
+# Hardening measures
+#  Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+#  Mount /usr, /boot/ and /etc read-only for the process.
+ProtectSystem=full
+#  Disallow the process and all of its children to gain
+#  new privileges through execve().
+NoNewPrivileges=true
+#  Use a new /dev namespace only populated with API pseudo devices
+#  such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+#  Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target
