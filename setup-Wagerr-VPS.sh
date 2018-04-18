@@ -5,7 +5,7 @@
 # This script will: 1) fix locale, 2) update system and install dependencies, 3) create a service user to run the node
 # 4) create a sudo user, 5) set SSHd to use keys only, to not accept root login (only accepts the new sudo user) and set other security restrictions
 # 6) configure UFW, 7) download wallet and place execs in /usr/local/bin, 8) create a complete wallet .conf
-# 9) create a systemd service to run the node, 10) setup Sentinel, 11) disable root login and 12) reboot to apply changes and start the node
+# 9) create logrotate rules for debug.log, 10) create a systemd service to run the node, 11) disable root login and 12) reboot to apply changes and start the node
 
 # Setup parameters // change default values - accounts and key - before running the script
 new_NOlogin="nologin"
@@ -118,26 +118,40 @@ cp -v $top_lvl_dir/bin/wagerr{d,-cli} /usr/local/bin
 rm -v $installer_file
 rm -Rv $top_lvl_dir
 echo
-mkdir -p /home/$new_NOlogin/.wagerr
+mkdir -pv /etc/wagerr
 echo -e "rpcuser=$random_user
 rpcpassword=$random_pass
 rpcallowip=127.0.0.1
 listen=1
 server=1
 daemon=1
+masternode=1
 logtimestamps=1
 maxconnections=256
-masternode=1
+
 externalip=$ext_IP_addr
+masternodeprivkey=$wallet_genkey
 bind=$ext_IP_addr
 masternodeaddr=$ext_IP_addr:55002
-masternodeprivkey=$wallet_genkey
-" | tee /home/$new_NOlogin/.wagerr/wagerr.conf
-chown -R $new_NOlogin:$new_NOlogin /home/$new_NOlogin/.wagerr/
+" | tee /etc/wagerr/wagerr.conf
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
+# Setup logrotate
+# Break debug.log into weekly files and keep at most 5 older log files
+echo -e "/home/$nologin/.COIN/debug.log
+{
+        rotate 5
+        copytruncate
+        weekly
+        missingok
+        notifempty
+        compress
+        delaycompress
+}" | tee /etc/logrotate.d/wagerr-debug
+
 # Setup systemd service file
+# https://github.com/bitcoin/bitcoin/blob/master/contrib/init/bitcoind.service
 echo -e "[Unit]
 Description=Wagerr Masternode
 After=network.target
@@ -146,18 +160,34 @@ After=network.target
 User=$new_NOlogin
 Group=$new_NOlogin
 
+# Creates /run/wagerrd owned by $new_NOlogin
+RuntimeDirectory=wagerrd
+
 Type=forking
-ExecStart=/usr/local/bin/wagerrd -pid=/home/$new_NOlogin/.wagerr/wagerr.pid
+ExecStart=/usr/local/bin/wagerrd -pid=/home/$new_NOlogin/.wagerr/wagerr.pid -conf=/etc/wagerr/wagerr.conf
 ExecStop=/usr/local/bin/wagerr-cli stop
 PIDFile=/home/$new_NOlogin/.wagerr/wagerr.pid
 
-Restart=always
+Restart=on-failure
 RestartSec=20
-PrivateTmp=true
 TimeoutStopSec=60s
 TimeoutStartSec=15s
 StartLimitInterval=120s
 StartLimitBurst=5
+
+# Hardening measures
+#  Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+#  Mount /usr, /boot/ and /etc read-only for the process.
+ProtectSystem=full
+#  Disallow the process and all of its children to gain
+#  new privileges through execve().
+NoNewPrivileges=true
+#  Use a new /dev namespace only populated with API pseudo devices
+#  such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+#  Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target
