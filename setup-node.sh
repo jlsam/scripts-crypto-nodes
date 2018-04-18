@@ -5,7 +5,7 @@
 # This script will: 1) fix locale, 2) update system and install dependencies, 3) create a service user to run the node
 # 4) create a sudo user, 5) set SSHd to use keys only, to not accept root login (only accepts the new sudo user) and set other security restrictions
 # 6) configure UFW, 7) download wallet and place execs in /usr/local/bin, 8) create a complete wallet .conf
-# 9) create a systemd service to run the node, 10) setup Sentinel, 11) disable root login and 12) reboot to apply changes and start the node
+# 9) create logrotate rules for debug.log, 10) create a systemd service to run the node, 11) disable root login and 12) reboot to apply changes and start the node
 
 # Setup parameters // change default values - accounts and key - before running the script
 new_NOlogin="nologin"
