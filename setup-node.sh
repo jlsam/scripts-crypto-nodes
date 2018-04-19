@@ -54,7 +54,6 @@ locale-gen $locs
 
 # Update system & install packages
 apt update && apt -y upgrade
-apt install -y virtualenv python-pip
 echo
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
@@ -126,11 +125,11 @@ rpcallowip=127.0.0.1
 listen=1
 server=1
 daemon=1
+masternode=1
 logtimestamps=1
 maxconnections=256
 externalip=$ext_IP_addr
 masternodeprivkey=$wallet_genkey
-masternode=1
 addnode=IP:PORT
 " | tee /etc/COIN/COIN.conf
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
