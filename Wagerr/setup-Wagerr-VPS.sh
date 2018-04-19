@@ -33,42 +33,43 @@ else
 fi
 
 # Other checks
-if [ "$wallet_genkey" = "---" ]; then
+if [ "${wallet_genkey}" = "---" ]; then
   printf "\nPlease set your masternode genkey from the cold wallet and run again.\n"
   exit 1
-elif [ "$new_NOlogin" = "nologin" ]; then
+elif [ "${new_NOlogin}" = "nologin" ]; then
   printf "\nPlease set your own username for the service account (no login) and run again.\n"
   exit 1
-elif [ "$new_sudoer" = "sudoer" ]; then
+elif [ "${new_sudoer}" = "sudoer" ]; then
   printf "\nPlease set your own username with sudo access and run again.\n"
   exit 1
-elif [ "$installer_url" = "https://something.tar.gz" ]; then
+elif [ "${installer_url}" = "https://something.tar.gz" ]; then
   printf "\nPlease set the URL for the current wallet version and run again.\n"
   exit 1
 fi
 
 # Fix locale.
-locale-gen $locs
+locale-gen ${locs}
 # During the next command interactive choices, it should be enough to OK everything
 #dpkg-reconfigure locales
 
 # Update system & install packages
+printf "\n\e[93mUpgrading Ubuntu...\e[0m\n"
 apt update && apt -y upgrade
 echo
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
 
 # Create service account
-useradd -r -m -s /usr/sbin/nologin -c "masternode service user" $new_NOlogin
+useradd -r -m -s /usr/sbin/nologin -c "masternode service user" ${new_NOlogin}
 
 # Create login account with sudo permission
-adduser $new_sudoer
-usermod -aG sudo $new_sudoer
+adduser ${new_sudoer}
+usermod -aG sudo ${new_sudoer}
 
 # Move SSH key to new user
-mv ~/.ssh /home/$new_sudoer/
-chown -R $new_sudoer:$new_sudoer /home/$new_sudoer/.ssh/
-chmod -R 700 /home/$new_sudoer/.ssh/
+mv ~/.ssh /home/${new_sudoer}/
+chown -R ${new_sudoer}:${new_sudoer} /home/${new_sudoer}/.ssh/
+chmod -R 700 /home/${new_sudoer}/.ssh/
 
 # Edit sshd_config
 printf "\n\e[93m/etc/ssh/sshd_config edits:\e[0m\n"
@@ -106,21 +107,21 @@ read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[
 echo
 
 # Setup COIN NAME Masternode
-installer_file="$(basename $installer_url)"
+installer_file="$(basename ${installer_url})"
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
 ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
 
 wget $installer_url
 tar -xvf $installer_file
-top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
+top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
 cp -v $top_lvl_dir/bin/wagerr{d,-cli} /usr/local/bin
 rm -v $installer_file
 rm -Rv $top_lvl_dir
 echo
 mkdir -pv /etc/wagerr
-echo -e "rpcuser=$random_user
-rpcpassword=$random_pass
+echo -e "rpcuser=${random_user}
+rpcpassword=${random_pass}
 rpcallowip=127.0.0.1
 listen=1
 server=1
@@ -129,17 +130,18 @@ masternode=1
 logtimestamps=1
 maxconnections=256
 
-externalip=$ext_IP_addr
-masternodeprivkey=$wallet_genkey
-bind=$ext_IP_addr
-masternodeaddr=$ext_IP_addr:55002
+externalip=${ext_IP_addr}
+masternodeprivkey=${wallet_genkey}
+bind=${ext_IP_addr}
+masternodeaddr=${ext_IP_addr}:55002
 " | tee /etc/wagerr/wagerr.conf
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
 # Setup logrotate
 # Break debug.log into weekly files and keep at most 5 older log files
-echo -e "/home/$nologin/.wagerr/debug.log
+printf "\n\e[93mCreating logrotate rules...\e[0m\n"
+echo -e "/home/${new_NOlogin}/.wagerr/debug.log
 {
         rotate 5
         copytruncate
@@ -157,10 +159,10 @@ Description=Wagerr Masternode
 After=network.target
 
 [Service]
-User=$new_NOlogin
-Group=$new_NOlogin
+User=${new_NOlogin}
+Group=${new_NOlogin}
 
-# Creates /run/wagerrd owned by $new_NOlogin
+# Creates /run/wagerrd owned by ${new_NOlogin}
 RuntimeDirectory=wagerrd
 
 Type=forking
