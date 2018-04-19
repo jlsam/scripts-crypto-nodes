@@ -167,7 +167,7 @@ RuntimeDirectory=wagerrd
 
 Type=forking
 ExecStart=/usr/local/bin/wagerrd -pid=/run/wagerrd/wagerr.pid -conf=/etc/wagerr/wagerr.conf
-ExecStop=/usr/local/bin/wagerr-cli stop
+ExecStop=/usr/local/bin/wagerr-cli -conf=/etc/wagerr/wagerr.conf stop
 PIDFile=/run/wagerrd/wagerr.pid
 
 Restart=on-failure
