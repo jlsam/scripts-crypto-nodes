@@ -1,6 +1,6 @@
 #!/bin/bash
 # assumes root login and requires pre-existing SSH key
-# run script with dot/space (source): '. setup_polis.sh' or 'source setup_polis.sh' to preserve directory changes.
+#
 
 # This script will: 1) fix locale, 2) update system and install dependencies, 3) create a service user to run the node
 # 4) create a sudo user, 5) set SSHd to use keys only, to not accept root login (only accepts the new sudo user) and set other security restrictions
@@ -139,7 +139,7 @@ echo
 
 # Setup logrotate
 # Break debug.log into weekly files and keep at most 5 older log files
-echo -e "/home/$nologin/.COIN/debug.log
+echo -e "/home/$nologin/.wagerr/debug.log
 {
         rotate 5
         copytruncate
@@ -164,9 +164,9 @@ Group=$new_NOlogin
 RuntimeDirectory=wagerrd
 
 Type=forking
-ExecStart=/usr/local/bin/wagerrd -pid=/home/$new_NOlogin/.wagerr/wagerr.pid -conf=/etc/wagerr/wagerr.conf
+ExecStart=/usr/local/bin/wagerrd -pid=/run/wagerrd/wagerr.pid -conf=/etc/wagerr/wagerr.conf
 ExecStop=/usr/local/bin/wagerr-cli stop
-PIDFile=/home/$new_NOlogin/.wagerr/wagerr.pid
+PIDFile=/run/wagerrd/wagerr.pid
 
 Restart=on-failure
 RestartSec=20
