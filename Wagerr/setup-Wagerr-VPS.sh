@@ -139,10 +139,9 @@ read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[
 echo
 
 # Setup logrotate
-# Break debug.log into weekly files and keep at most 5 older log files
+# Break debug.log into weekly files, compress and keep at most 5 older log files
 printf "\n\e[93mCreating logrotate rules...\e[0m\n"
-echo -e "/home/${new_NOlogin}/.wagerr/debug.log
-{
+echo -e "/home/${new_NOlogin}/.wagerr/debug.log {
         rotate 5
         copytruncate
         weekly
@@ -154,6 +153,7 @@ echo -e "/home/${new_NOlogin}/.wagerr/debug.log
 
 # Setup systemd service file
 # https://github.com/bitcoin/bitcoin/blob/master/contrib/init/bitcoind.service
+printf "\n\e[93mCreating systemd service file...\e[0m\n"
 echo -e "[Unit]
 Description=Wagerr Masternode
 After=network.target
