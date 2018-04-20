@@ -120,6 +120,7 @@ rm -v $installer_file
 rm -Rv $top_lvl_dir
 echo
 mkdir -pv /etc/wagerr
+printf "\n\e[93m .conf settings:\e[0m\n"
 echo -e "rpcuser=${random_user}
 rpcpassword=${random_pass}
 rpcallowip=127.0.0.1
@@ -129,7 +130,6 @@ daemon=1
 masternode=1
 logtimestamps=1
 maxconnections=256
-
 externalip=${ext_IP_addr}
 masternodeprivkey=${wallet_genkey}
 bind=${ext_IP_addr}
