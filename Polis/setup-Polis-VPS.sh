@@ -5,12 +5,14 @@
 # This script will: 1) fix locale, 2) update system and install dependencies, 3) create a service user to run the node
 # 4) create a sudo user, 5) set SSHd to use keys only, to not accept root login (only accepts the new sudo user) and set other security restrictions
 # 6) configure UFW, 7) download wallet and place execs in /usr/local/bin, 8) create a complete wallet .conf
-# 9) create a systemd service to run the node, 10) setup Sentinel, 11) disable root login and 12) reboot to apply changes and start the node
+# 9) create logrotate rules for debug.log, 10) create a systemd service to run the node,
+# 11) setup Sentinel, 12) disable root login and 13) reboot to apply changes and start the node
 
 # Setup parameters // change default values - accounts and key - before running the script
 new_NOlogin="nologin"
 new_sudoer="sudoer"
 wallet_genkey="---" # Needs to be a valid key, otherwise the node won't even run
+# Get the latest download link from https://github.com/polispay/polis/releases
 installer_url="https://something.tar.gz"
 # Setting locale for en_US.UTF-8, but it should work with your prefered locale too.
 # Depending on your location, you may need to add/modify locales here to avoid errors,
@@ -108,17 +110,20 @@ read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[
 echo
 
 # Setup Polis Masternode
+#  Download and install node wallet
 installer_file="$(basename ${installer_url})"
+wget ${installer_url}
+tar -xvf ${installer_file}
+top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
+cp -v ${top_lvl_dir}/bin/polis{d,-cli} /usr/local/bin
+rm -v ${installer_file}
+rm -Rv ${top_lvl_dir}
+
+#  Setup polis.conf
+#  https://github.com/polispay/polis-doc/tree/master/masternode-setup
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
 ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-
-wget $installer_url
-tar -xvf $installer_file
-top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
-cp -v $top_lvl_dir/bin/polis{d,-cli} /usr/local/bin
-rm -v $installer_file
-rm -Rv $top_lvl_dir
 echo
 mkdir -pv /etc/polis
 printf "\n\e[93m .conf settings:\e[0m\n"
@@ -153,8 +158,8 @@ addnode=199.247.29.65:24126
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
-# Setup logrotate
-# Break debug.log into weekly files, compress and keep at most 5 older log files
+#  Setup logrotate
+#  Break debug.log into weekly files, compress and keep at most 5 older log files
 printf "\n\e[93mCreating logrotate rules...\e[0m\n"
 echo -e "/home/${new_NOlogin}/.poliscore/debug.log {
         rotate 5

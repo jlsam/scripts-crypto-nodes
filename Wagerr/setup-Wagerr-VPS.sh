@@ -11,6 +11,7 @@
 new_NOlogin="nologin"
 new_sudoer="sudoer"
 wallet_genkey="---" # Needs to be a valid key, otherwise the node won't even run
+# Get the latest download link from https://github.com/wagerr/wagerr/releases
 installer_url="https://something.tar.gz"
 # Setting locale for en_US.UTF-8, but it should work with your prefered locale too.
 # Depending on your location, you may need to add/modify locales here to avoid errors,
@@ -107,17 +108,19 @@ read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[
 echo
 
 # Setup Wagerr Masternode
+#  Download and install node wallet
 installer_file="$(basename ${installer_url})"
+wget ${installer_url}
+tar -xvf ${installer_file}
+top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
+cp -v ${top_lvl_dir}/bin/wagerr{d,-cli} /usr/local/bin
+rm -v ${installer_file}
+rm -Rv ${top_lvl_dir}
+
+#  Setup wagerr.conf
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
 ext_IP_addr="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-
-wget $installer_url
-tar -xvf $installer_file
-top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
-cp -v $top_lvl_dir/bin/wagerr{d,-cli} /usr/local/bin
-rm -v $installer_file
-rm -Rv $top_lvl_dir
 echo
 mkdir -pv /etc/wagerr
 printf "\n\e[93m .conf settings:\e[0m\n"
@@ -130,16 +133,16 @@ daemon=1
 masternode=1
 logtimestamps=1
 maxconnections=256
-externalip=${ext_IP_addr}
-masternodeprivkey=${wallet_genkey}
-bind=${ext_IP_addr}
 masternodeaddr=${ext_IP_addr}:55002
+masternodeprivkey=${wallet_genkey}
+externalip=${ext_IP_addr}
+bind=${ext_IP_addr}
 " | tee /etc/wagerr/wagerr.conf
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
-# Setup logrotate
-# Break debug.log into weekly files, compress and keep at most 5 older log files
+#  Setup logrotate
+#  Break debug.log into weekly files, compress and keep at most 5 older log files
 printf "\n\e[93mCreating logrotate rules...\e[0m\n"
 echo -e "/home/${new_NOlogin}/.wagerr/debug.log {
         rotate 5
@@ -153,6 +156,7 @@ echo -e "/home/${new_NOlogin}/.wagerr/debug.log {
 
 # Setup systemd service file
 # https://github.com/bitcoin/bitcoin/blob/master/contrib/init/bitcoind.service
+# https://github.com/wagerr/wagerr/blob/master/contrib/init/wagerrd.service
 printf "\n\e[93mCreating systemd service file...\e[0m\n"
 echo -e "[Unit]
 Description=Wagerr Masternode

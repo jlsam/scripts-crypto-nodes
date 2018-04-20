@@ -5,12 +5,12 @@
 # Run script with the URL to the new version to download as parameter, for example:
 # ./update_node.sh https://github.com/wagerr/wagerr/releases/download/1.5.0/wagerr-1.5.0-x86_64-linux-gnu.tar.gz
 
+# Elevate user if necessary, to be able to copy files into /usr/local/bin
+[ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
+
 # Account name running the node
 # You must set this to show node status after restarting
 daemon_user="---"
-
-# Elevate user if necessary, to be able to copy files into /usr/local/bin
-[ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
 
 # Checks
 if [ "${daemon_user}" = "---" ]; then
@@ -40,20 +40,20 @@ if [[ ${installer_file} =~ \.zip$ ]]; then
   top_lvl_dir="$(unzip -l ${installer_file} | sed -e 's@/.*@@' | uniq)"
 else
   case ${installer_file} in
-	*.tar.bz2) tar -xvjf ${installer_file} ;;
+      	*.tar.bz2) tar -xvjf ${installer_file} ;;
         *.tar.gz)  tar -xvzf ${installer_file} ;;
 #        *.bz2)     bunzip2 ${installer_file}   ;;
 #        *.gz)      gunzip ${installer_file}    ;;
         *.tar)     tar -xvf ${installer_file}  ;;
         *.tbz2)    tar -xvjf ${installer_file} ;;
         *.tgz)     tar -xvzf ${installer_file} ;;
-      	*)         printf "\e[93mDon't know how to handle '$installer_file'...\e[0m\n" && exit 1 ;;
+      	*)         printf "\e[93mDon't know how to handle '${installer_file}'...\e[0m\n" && exit 1 ;;
   esac
-  top_lvl_dir="$(tar -tzf $installer_file | sed -e 's@/.*@@' | uniq)"
+  top_lvl_dir="$(tar -tzf ${installer_file} | sed -e 's@/.*@@' | uniq)"
 fi
 
 # Copy new files over to /usr/local/bin
-printf "\n\e[93mStopping wallet node service...\e[0m\n"
+printf "\n\e[93mStopping wallet node service and upgrading binaries...\e[0m\n"
 systemctl stop wagerrd.service
 cp -v ${top_lvl_dir}/bin/wagerr{-cli,d} /usr/local/bin
 # Delete installer and remove extracted dir if copy was successful
