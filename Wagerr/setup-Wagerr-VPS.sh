@@ -106,7 +106,7 @@ ufw status
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m')"
 echo
 
-# Setup COIN NAME Masternode
+# Setup Wagerr Masternode
 installer_file="$(basename ${installer_url})"
 random_user="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16)"
 random_pass="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 26)"
