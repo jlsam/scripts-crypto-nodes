@@ -58,7 +58,7 @@ systemctl stop lindad.service
 cp -v Lindad /usr/local/bin
 # Delete installer and remove extracted dir if copy was successful
 if [[ $? -eq "0" ]]; then
-  rm -v $installer_file
+  rm -v ${installer_file}
   rm -v Lindad
 fi
 
@@ -70,5 +70,5 @@ until sudo -H -u ${daemon_user} bash -c "Lindad -conf=/etc/Linda/Linda.conf geti
   sleep 2
 done
 
-sudo -H -u $COIN_user bash -c "Lindad -conf=/etc/Linda/Linda.conf getinfo"
-sudo -H -u $COIN_user bash -c "Lindad -conf=/etc/Linda/Linda.conf masternode status"
+sudo -H -u ${daemon_user} bash -c "Lindad -conf=/etc/Linda/Linda.conf getinfo"
+sudo -H -u ${daemon_user} bash -c "Lindad -conf=/etc/Linda/Linda.conf masternode start"

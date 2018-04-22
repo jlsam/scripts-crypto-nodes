@@ -141,7 +141,6 @@ logtimestamps=1
 maxconnections=256
 masternodeaddr=${ext_IP_addr}:33820
 masternodeprivkey=${wallet_genkey}
-
 addnode=seed1.linda-wallet.com
 addnode=seed2.linda-wallet.com
 addnode=seed3.linda-wallet.com
