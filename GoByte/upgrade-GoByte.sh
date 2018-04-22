@@ -3,7 +3,7 @@
 # This script assumes the same naming and location choices made for the installer script;
 # If you placed the executables in another directory or if you named the systemd service file differently, you'll have to modify this script accordingly.
 # Run script with the URL to the new version to download as parameter, for example:
-# ./update_node.sh https://github.com/polispay/polis/releases/download/v1.3.0/poliscore-1.3.0-x86_64-linux-gnu.tar.gz
+# ./update_node.sh https://github.com/gobytecoin/gobyte/releases/download/v0.12.1.3/GoByte_0.12.1.3_Linux.zip
 
 # Elevate user if necessary, to be able to copy files into /usr/local/bin
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
@@ -54,8 +54,8 @@ fi
 
 # Copy new files over to /usr/local/bin
 printf "\n\e[93mStopping wallet node service and upgrading binaries...\e[0m\n"
-systemctl stop COINd.service
-cp -v ${top_lvl_dir}/bin/COIN{-cli,d} /usr/local/bin
+systemctl stop gobyted.service
+cp -v ${top_lvl_dir}/gobyte{-cli,d} /usr/local/bin
 # Delete installer and remove extracted dir if copy was successful
 if [[ $? -eq "0" ]]; then
   rm -v ${installer_file}
@@ -65,10 +65,10 @@ fi
 # Restart wallet node
 printf "\n\e[93mUpgrade completed.\n"
 read -n1 -rsp "$(printf 'Press any key to restart the wallet daemon or Ctrl+C to exit...\e[0m\n')"
-systemctl restart COINd.service
-until sudo -H -u ${daemon_user} bash -c "COIN-cli -conf=/etc/COIN/COIN.conf getinfo" &>/dev/null; do
+systemctl restart gobyted.service
+until sudo -H -u ${daemon_user} bash -c "gobyte-cli -conf=/etc/gobyte/gobyte.conf getinfo" &>/dev/null; do
   sleep 2
 done
 
-sudo -H -u ${daemon_user} bash -c "COIN-cli -conf=/etc/COIN/COIN.conf getinfo"
-sudo -H -u ${daemon_user} bash -c "COIN-cli -conf=/etc/COIN/COIN.conf masternode status"
+sudo -H -u ${daemon_user} bash -c "gobyte-cli -conf=/etc/gobyte/gobyte.conf getinfo"
+sudo -H -u ${daemon_user} bash -c "gobyte-cli -conf=/etc/gobyte/gobyte.conf masternode status"

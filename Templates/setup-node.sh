@@ -11,6 +11,7 @@
 new_NOlogin="nologin"
 new_sudoer="sudoer"
 wallet_genkey="---" # Needs to be a valid key, otherwise the node won't even run
+# Get the latest download link from URL
 installer_url="https://something.tar.gz"
 # Setting locale for en_US.UTF-8, but it should work with your prefered locale too.
 # Depending on your location, you may need to add/modify locales here to avoid errors,
@@ -163,7 +164,7 @@ RuntimeDirectory=COINd
 
 Type=forking
 ExecStart=/usr/local/bin/COIN_DAEMON -pid=/run/COINDd/COIN_NAME.pid -conf=/etc/COIN/COIN.conf
-ExecStop=/usr/local/bin/COIN_NAME-cli stop
+ExecStop=/usr/local/bin/COIN_NAME-cli -conf=/etc/COIN/COIN.conf stop
 PIDFile=/run/COIND/COIN_NAME.pid
 
 Restart=on-failure
@@ -189,8 +190,8 @@ MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target
-" | tee /etc/systemd/system/COIN DAEMON.service
-systemctl enable COIN DAEMON.service
+" | tee /etc/systemd/system/COIN_DAEMON.service
+systemctl enable COIN_DAEMON.service
 read -n1 -rsp "$(printf '\e[93mPress any key to continue or Ctrl+C to exit...\e[0m\n')"
 echo
 

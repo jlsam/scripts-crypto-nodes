@@ -68,7 +68,7 @@ cd /home/${daemon_user}/sentinel/ && sudo -H -u ${daemon_user} bash -c "git pull
 
 # Restart wallet node
 printf "\n\e[93mUpgrade completed.\n"
-read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
+read -n1 -rsp "$(printf 'Press any key to restart the wallet daemon or Ctrl+C to exit...\e[0m\n')"
 systemctl start polisd.service
 until sudo -H -u ${daemon_user} bash -c "polis-cli -conf=/etc/polis/polis.conf getinfo" &>/dev/null; do
   sleep 2

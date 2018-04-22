@@ -7,7 +7,7 @@ Modifications to /etc/ssh/sshd_config will change your server's fingerprint afte
 You will probably get a warning message, but you can follow the command suggested by the warning message to remove the previous fingerprint (copy/paste):<br>
 `ssh-keygen -f "/home/<user>/.ssh/known_hosts" -R <server IP>`<br>
 After that, reconnect and accept the new fingerprint.
-  
+
 These scripts will always work on a baseline of Key-based SSH authentication. No passwords for server authentication.<br>
 You are of course free to edit the scripts to work with passwords for authentication, but you'll have a hard time finding anyone giving advice on how that's a good idea. If you don't know how Key-based SSH authentication works, you can start by reading this: https://help.ubuntu.com/community/SSH/OpenSSH/Keys. If you want to connect from Windows, Putty is your friend, try searching 'how to use putty ssh' for example.
 
@@ -31,5 +31,7 @@ LTC or ETH is appreciated, but also any of the coins these scripts are for.
 
 LTC: LSE7ezK7Qoszjgz9Ew25xmxazBzEsSL4Qt<br>
 ETH: 0xc7Ef788B776734Ff3694c1Be8465110Babf61a6a<br>
+GoByte: GYvyuGKHPF5y8UztBcxHqarKAx6HLGHqEb<br>
 Linda: LUDZLYQMvR1ppBawBdcbEFPTneU4GSMWvw<br>
 Polis: PJyr4NgoPrWLuKsSV7gVZBNmDKGbK4PJbC<br>
+Wagerr: WRccwGqUmp7U43rNMPAdAxB4FpnVctmcQr<br>

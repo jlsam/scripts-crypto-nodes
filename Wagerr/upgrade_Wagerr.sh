@@ -64,7 +64,7 @@ fi
 
 # Restart wallet node
 printf "\n\e[93mUpgrade completed.\n"
-read -n1 -rsp "$(printf 'Press any key to restart the wallet node or Ctrl+C to exit...\e[0m\n')"
+read -n1 -rsp "$(printf 'Press any key to restart the wallet daemon or Ctrl+C to exit...\e[0m\n')"
 systemctl restart wagerrd.service
 until sudo -H -u ${daemon_user} bash -c "wagerr-cli -conf=/etc/wagerr/wagerr.conf getinfo" &>/dev/null; do
   sleep 2
