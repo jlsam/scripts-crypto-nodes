@@ -1,3 +1,5 @@
+> This repository is not maintained and the code is most likely not working. You are however welcome to browse the files for ideas, solutions, etc.
+
 # scripts-crypto-nodes
 Collection of Bash scripts for quick deployment and update of cryptocurrency (master)nodes in Ubuntu.
 
@@ -27,11 +29,7 @@ This is still work in progress, other coins will be added in time and also scrip
 Comments and suggestions are appreciated!
 
 If this work helped you in any way, saved you time or showed you something you didn't know, consider leaving a tip.<br>
-LTC or ETH is appreciated, but also any of the coins these scripts are for.
+BAT is appreciated, but also any of the coins below.
 
-LTC: LSE7ezK7Qoszjgz9Ew25xmxazBzEsSL4Qt<br>
-ETH: 0xc7Ef788B776734Ff3694c1Be8465110Babf61a6a<br>
 GoByte: GYvyuGKHPF5y8UztBcxHqarKAx6HLGHqEb<br>
-Linda: LUDZLYQMvR1ppBawBdcbEFPTneU4GSMWvw<br>
-Polis: PJyr4NgoPrWLuKsSV7gVZBNmDKGbK4PJbC<br>
 Wagerr: WRccwGqUmp7U43rNMPAdAxB4FpnVctmcQr<br>
